@@ -3,14 +3,50 @@
 <head>
   <title>Home</title>
   <style>
-    body { background:#000; color:#fff; font-family:Arial; padding:40px; }
-    a { color:#c03cff; display:block; margin:15px 0; font-size:22px; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    a {
+      background: #a100ff;
+      color: white;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      background: #c03cff;
+    }
   </style>
 </head>
 <body>
   <h1>Welcome to Roxie Members</h1>
-  <a href="music.html">Music</a>
-  <a href="pics.html">Pics</a>
-  <a href="lore.html">Lore</a>
+
+  <div class="button-container">
+    <a href="music.html">Music</a>
+    <a href="pics.html">Pics</a>
+    <a href="lore.html">Lore</a>
+    <a href="vip.html">VIP</a>
+  </div>
 </body>
 </html>
