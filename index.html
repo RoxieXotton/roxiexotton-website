@@ -1,23 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
-<style>
-body {
-  background:#000;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  padding:40px;
-}
-a {
-  color:#f44;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roxie Members</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .box {
+      width: 320px;
+      padding: 30px;
+      border-radius: 14px;
+      background: #111;
+      border: 1px solid #333;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
+    }
+    input {
+      background: #222;
+      color: white;
+    }
+    button {
+      background: #a100ff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-<h1>Login Page</h1>
-<p>Replace this with the login page.</p>
+  <div class="box">
+    <h1>Roxie Members</h1>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signIn()">Log In</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://ghfjfuewrmtkoqcqcujo.supabase.co";
+    const supabaseKey = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      document.getElementById('message').innerText = error ? error.message : "Signup successful";
+    }
+
+    async function signIn() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        document.getElementById('message').innerText = error.message;
+      } else {
+        window.location.href = "home.html";
+      }
+    }
+  </script>
 </body>
 </html>
