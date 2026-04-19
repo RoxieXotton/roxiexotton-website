@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roxie Members</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     body {
       margin: 0;
@@ -16,6 +18,7 @@
       align-items: center;
       min-height: 100vh;
     }
+
     .box {
       width: 320px;
       padding: 30px;
@@ -24,7 +27,13 @@
       border: 1px solid #333;
       text-align: center;
     }
-    input, button {
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input,
+    button {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
@@ -32,59 +41,75 @@
       border: none;
       box-sizing: border-box;
     }
+
     input {
       background: #222;
       color: white;
     }
+
     button {
       background: #a100ff;
       color: white;
       cursor: pointer;
       font-weight: bold;
     }
+
+    button:hover {
+      background: #c03cff;
+    }
+
+    #message {
+      color: #ff66ff;
+      margin-top: 10px;
+      min-height: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="box">
     <h1>Roxie Members</h1>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+
     <button onclick="signUp()">Sign Up</button>
     <button onclick="signIn()">Log In</button>
+
     <p id="message"></p>
   </div>
 
   <script>
     const supabaseUrl = "https://ghfjfuewrmtkoqcqcujo.supabase.co";
-    const supabaseKey = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+    const supabaseKey = "sb_publishable_DYIDai05yxMKsJbyU9K_pA_AxfdmSII";
 
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     async function signUp() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signUp({
+      const { error } = await client.auth.signUp({
         email,
         password
       });
 
-      document.getElementById('message').innerText = error ? error.message : "Signup successful";
+      document.getElementById("message").innerText =
+        error ? error.message : "Signup successful";
     }
 
     async function signIn() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await client.auth.signInWithPassword({
         email,
         password
       });
 
       if (error) {
-        document.getElementById('message').innerText = error.message;
+        document.getElementById("message").innerText = error.message;
       } else {
-        window.location.href = "home.html";
+        window.location.href = "/home.html";
       }
     }
   </script>
