@@ -12,9 +12,10 @@
     body {
       min-height: 100vh;
       background-image: url("homebg.png");
-      background-size: cover;
+      background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
+      background-color: #000;
       font-family: Arial, sans-serif;
       overflow: hidden;
       position: relative;
@@ -28,50 +29,109 @@
       z-index: 1;
     }
 
+    .video-container {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 420px;
+      aspect-ratio: 9 / 16;
+      border-radius: 14px;
+      overflow: hidden;
+      z-index: 10;
+      box-shadow:
+        0 0 18px rgba(212, 76, 255, 0.5),
+        0 0 35px rgba(139, 0, 255, 0.25);
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     .button-container {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -32%);
+      transform: translate(-50%, 50%);
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      width: 340px;
-      z-index: 2;
+      gap: 16px;
+      width: 275px;
+      z-index: 10;
     }
 
     .button-container a {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      height: 64px;
+      height: 52px;
       border-radius: 12px;
-      text-indent: -9999px;
-      overflow: hidden;
-      background: transparent;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(to bottom, #d63bff, #8b00ff);
+      border: 2px solid #c44dff;
+      box-shadow:
+        0 0 12px rgba(212, 76, 255, 0.7),
+        inset 0 0 10px rgba(255, 255, 255, 0.15);
+      transition: 0.2s ease;
+      position: relative;
+      z-index: 20;
+    }
+
+    .button-container a:hover {
+      transform: scale(1.03);
+      background: linear-gradient(to bottom, #eb6cff, #a100ff);
+      box-shadow:
+        0 0 18px rgba(212, 76, 255, 0.9),
+        inset 0 0 12px rgba(255, 255, 255, 0.2);
     }
 
     @media (max-width: 768px) {
       body {
+        background-size: cover;
         background-position: center;
       }
 
+      .video-container {
+        width: 220px;
+        top: 14%;
+      }
+
       .button-container {
-        width: 280px;
-        transform: translate(-50%, -28%);
+        width: 235px;
+        transform: translate(-50%, -22%);
+        gap: 12px;
       }
 
       .button-container a {
-        height: 54px;
+        height: 46px;
+        font-size: 16px;
       }
     }
   </style>
 </head>
 <body>
+
+  <div class="video-container">
+    <iframe 
+      src="https://www.youtube.com/embed/dQ2fNorrgao"
+      title="Roxie Video"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
   <div class="button-container">
-    <a href="music.html">Music</a>
+    <a href="videos.html">Videos</a>
     <a href="pics.html">Pics</a>
+    <a href="music.html">Music</a>
     <a href="lore.html">Lore</a>
-    <a href="vip.html">VIP</a>
   </div>
 </body>
 </html>
