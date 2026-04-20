@@ -8,110 +8,94 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      padding: 0;
     }
 
-    .box {
-      width: 320px;
-      padding: 30px;
-      border-radius: 14px;
-      background: #111;
-      border: 1px solid #333;
-      text-align: center;
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      background: url("login.png") center left / cover no-repeat;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.05) 35%,
+        rgba(0,0,0,0.4) 50%,
+        rgba(0,0,0,0.85) 68%,
+        rgba(0,0,0,1) 100%
+      );
+    }
+
+    .login-wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 450px;
+      margin-right: 8vw;
+    }
+
+    .login-box {
+      background: rgba(10, 10, 10, 0.75);
+      border: 1px solid rgba(160, 0, 255, 0.4);
+      border-radius: 16px;
+      padding: 35px;
+      box-shadow: 0 0 25px rgba(160, 0, 255, 0.2);
+      backdrop-filter: blur(4px);
     }
 
     h1 {
-      margin-bottom: 20px;
+      font-size: 42px;
+      color: #c86bff;
+      margin-bottom: 8px;
     }
 
-    input,
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: none;
-      box-sizing: border-box;
+    .sub {
+      color: #aaa;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
     }
 
     input {
-      background: #222;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #111;
       color: white;
+      font-size: 16px;
     }
 
     button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
       background: #a100ff;
       color: white;
       cursor: pointer;
+      font-size: 16px;
       font-weight: bold;
+      transition: 0.2s;
     }
 
     button:hover {
-      background: #c03cff;
-    }
-
-    #message {
-      color: #ff66ff;
-      margin-top: 10px;
-      min-height: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h1>Roxie Members</h1>
-
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="signIn()">Log In</button>
-
-    <p id="message"></p>
-  </div>
-
-  <script>
-    const supabaseUrl = "https://ghfjfuewrmtkoqcqcujo.supabase.co";
-    const supabaseKey = "sb_publishable_DYIDai05yxMKsJbyU9K_pA_AxfdmSII";
-
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-    async function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { error } = await client.auth.signUp({
-        email,
-        password
-      });
-
-      document.getElementById("message").innerText =
-        error ? error.message : "Signup successful";
-    }
-
-    async function signIn() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { error } = await client.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        document.getElementById("message").innerText = error.message;
-      } else {
-        window.location.href = "/home.html";
-      }
-    }
-  </script>
-</body>
 </html>
