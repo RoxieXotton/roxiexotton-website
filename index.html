@@ -174,13 +174,14 @@
   box-shadow: 0 0 20px rgba(180, 0, 255, 0.3);
   pointer-events: none;
 }
-.music-player iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-radius: 50%;
-}
 
+#musicFrame,
+#musicFrame iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50%;
+  overflow: hidden;
+}
     .social-column {
       position: absolute;
       left: -0.5vw;
@@ -404,7 +405,9 @@
 
   <div class="left-column">
 
-  <div class="music-player"> <iframe src="https://www.youtube.com/embed/skX4fFp-Yu4?autoplay=1&mute=1&rel=0&controls=0&cc_load_policy=0&modestbranding=1" title="Roxie Xotton Player" allow="autoplay" allowfullscreen> </iframe> </div>
+  <div class="music-player">
+    <div id="musicFrame"></div>
+  </div>
 
   <div class="social-column">
     <a href="https://www.instagram.com/roxiexotton/" class="social-icon" target="_blank">
@@ -429,6 +432,59 @@
   </div>
 
 </div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+  const videos = [
+    "skX4fFp-Yu4",
+    "87bCWw4b1eA",
+    "DTF1Eof7jjU",
+    "Sy5e5NgsI90",
+    "A3c7paCU1ss"
+  ];
+
+  let player;
+  let currentVideo = "";
+
+  function getRandomVideo() {
+    let nextVideo;
+
+    do {
+      nextVideo = videos[Math.floor(Math.random() * videos.length)];
+    } while (nextVideo === currentVideo && videos.length > 1);
+
+    currentVideo = nextVideo;
+    return nextVideo;
+  }
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player("musicFrame", {
+      width: "100%",
+      height: "100%",
+      videoId: getRandomVideo(),
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        controls: 0,
+        rel: 0,
+        modestbranding: 1,
+        cc_load_policy: 0,
+        playsinline: 1
+      },
+      events: {
+        onReady: function(event) {
+          event.target.playVideo();
+        },
+        onStateChange: function(event) {
+          if (event.data === YT.PlayerState.ENDED) {
+            player.loadVideoById(getRandomVideo());
+          }
+        }
+      }
+    });
+  }
+</script>
 
 <div class="login-wrap">
   <div class="roxie-title">Roxie Xotton</div>
