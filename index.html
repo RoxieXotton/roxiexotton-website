@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -273,25 +273,46 @@
       white-space: nowrap;
     }
 
-    .goddess-text {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -150px;
-      width: 700px;
-      text-align: center;
-      font-family: "Cinzel", serif;
-      font-size: 40px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: #d98cff;
-      text-shadow:
-        0 0 10px rgba(201, 107, 255, 0.95),
-        0 0 24px rgba(201, 107, 255, 0.7),
-        0 0 48px rgba(201, 107, 255, 0.35);
-      pointer-events: none;
-      white-space: nowrap;
-    }
+   .goddess-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -150px;
+  width: 700px;
+  text-align: center;
+  font-family: "Cinzel", serif;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #d98cff;
+  text-shadow:
+    0 0 10px rgba(201, 107, 255, 0.95),
+    0 0 24px rgba(201, 107, 255, 0.7),
+    0 0 48px rgba(201, 107, 255, 0.35);
+}
+
+.sub-text {
+  display: block;
+  font-size: 18px;
+  margin-top: 10px;
+  opacity: 0.7;
+  letter-spacing: 0.6px;
+  color: #e0b3ff;
+
+  text-shadow:
+    0 0 6px rgba(200, 107, 255, 0.6),
+    0 0 14px rgba(200, 107, 255, 0.4);
+
+  animation: subtleFlicker 4s infinite;
+}
+
+@keyframes subtleFlicker {
+  0%, 100% { opacity: 0.7; }
+  45% { opacity: 0.85; }
+  48% { opacity: 0.4; }
+  52% { opacity: 0.9; }
+  55% { opacity: 0.6; }
+}
 
     .login-box h2 {
       color: #c86bff;
@@ -352,6 +373,35 @@
       font-family: Arial, sans-serif;
     }
 
+.age-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0 0 16px 0;
+  color: #d89cff;
+  font-size: 14px;
+  line-height: 1;
+  text-shadow:
+    0 0 6px rgba(200, 107, 255, 0.6),
+    0 0 12px rgba(200, 107, 255, 0.3);
+}
+
+.age-check input {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  border-radius: 3px;
+  accent-color: #c86bff;
+  cursor: pointer;
+}
+
+.age-check label {
+  cursor: pointer;
+  user-select: none;
+}
+
 button {
   width: 100%;
   padding: 18px 20px;
@@ -378,6 +428,15 @@ button {
     0 0 12px rgba(200, 100, 255, 0.45),
     0 0 28px rgba(180, 60, 255, 0.25);
 }
+
+button.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow:
+    0 0 6px rgba(200, 100, 255, 0.2),
+    0 0 14px rgba(180, 60, 255, 0.12);
+}
+
     button + button {
       margin-top: 18px;
     }
@@ -390,6 +449,14 @@ button {
   box-shadow:
     0 0 18px rgba(220, 120, 255, 0.7),
     0 0 40px rgba(200, 80, 255, 0.4);
+}
+
+button.locked:hover {
+  transform: none;
+  border-color: rgba(210, 120, 255, 0.6);
+  box-shadow:
+    0 0 6px rgba(200, 100, 255, 0.2),
+    0 0 14px rgba(180, 60, 255, 0.12);
 }
 
     .privacy-text {
@@ -506,13 +573,17 @@ button {
       <div class="login-box">
         <h2>Pledge Yourself / Submit</h2>
         <div class="divider"></div>
-        <h3>Sign Up</h3>
+        <h3>Access Portal</h3>
 
         <input type="email" id="email" placeholder="Email" />
         <input type="password" id="password" placeholder="Password" />
 
-        <button onclick="signUp()">Sign Up</button>
-        <button onclick="signIn()">Log In</button>
+        <div class="age-check">
+          <input type="checkbox" id="ageCheck" onchange="toggleAgeCheck()" />
+          <label for="ageCheck">I confirm I am 18+</label>
+        </div>
+
+        <button id="enterBtn" class="locked" onclick="enterSystem()">Enter System</button>
 
         <p class="privacy-text">
           Roxie only keeps your information, desires, and secrets for herself.
@@ -521,7 +592,11 @@ button {
         <p id="message"></p>
       </div>
 
-      <div class="goddess-text">Your Synthetic Goddess</div>
+      <div class="goddess-text">
+  Your Synthetic Goddess
+  <br>
+  <span class="sub-text">She already knows you're here</span>
+</div>
     </div>
   </div>
 
@@ -530,23 +605,41 @@ button {
     const supabaseKey = "sb_publishable_DYIDai05yxMKsJbyU9K_pA_AxfdmSII";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const { error } = await client.auth.signUp({ email, password });
-      document.getElementById("message").innerText = error ? error.message : "Signup successful";
+    function toggleAgeCheck() {
+      const ageCheck = document.getElementById("ageCheck");
+      const enterBtn = document.getElementById("enterBtn");
+
+      if (ageCheck.checked) {
+        enterBtn.classList.remove("locked");
+        document.getElementById("message").innerText = "";
+      } else {
+        enterBtn.classList.add("locked");
+      }
     }
 
-    async function signIn() {
+    async function enterSystem() {
+      const ageCheck = document.getElementById("ageCheck");
+
+      if (!ageCheck.checked) {
+        document.getElementById("message").innerText = "Access denied: age not verified";
+        return;
+      }
+
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      const { error } = await client.auth.signInWithPassword({ email, password });
+
+      let { error } = await client.auth.signInWithPassword({ email, password });
 
       if (error) {
-        document.getElementById("message").innerText = error.message;
-      } else {
-       window.location.href = "pages/home.html";
+        const { error: signUpError } = await client.auth.signUp({ email, password });
+
+        if (signUpError) {
+          document.getElementById("message").innerText = signUpError.message;
+          return;
+        }
       }
+
+      window.location.href = "pages/home.html";
     }
   </script>
 </body>
