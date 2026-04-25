@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roxie Image Archive</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #000;
+  color: #e8b8ff;
+  font-family: "Cormorant Garamond", serif;
+  overflow: hidden;
+}
+
+.archive-page {
+  width: 100vw;
+  height: 100vh;
+  padding: 28px 36px;
+  position: relative;
+  border: 1px solid rgba(200, 80, 255, 0.45);
+  box-shadow: inset 0 0 40px rgba(120, 0, 180, 0.18);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title h1 {
+  font-family: "Cinzel", serif;
+  font-size: 52px;
+  letter-spacing: 3px;
+  color: #d774ff;
+  text-shadow:
+    0 0 10px rgba(200, 100, 255, 0.9),
+    0 0 35px rgba(200, 80, 255, 0.45);
+}
+
+.title p {
+  font-family: "Cinzel", serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+
+.back-btn {
+  font-family: "Cinzel", serif;
+  font-size: 16px;
+  color: #e8b8ff;
+  text-decoration: none;
+  padding: 14px 28px;
+  border: 1px solid rgba(220, 100, 255, 0.75);
+  background: rgba(20, 0, 30, 0.6);
+  box-shadow: 0 0 16px rgba(200, 80, 255, 0.45);
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #fff;
+  transform: scale(1.04);
+  box-shadow: 0 0 24px rgba(220, 120, 255, 0.8);
+}
+
+.status-bar {
+  margin-top: 14px;
+  width: fit-content;
+  padding: 7px 18px;
+  border: 1px solid rgba(200, 80, 255, 0.55);
+  background: rgba(12, 0, 18, 0.65);
+  font-family: "Cinzel", serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+/* MAIN */
+.archive-layout {
+  margin-top: 8px;
+  height: calc(100vh - 160px);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  border: 1px solid rgba(200, 80, 255, 0.35);
+}
+
+/* LEFT NAV */
+.sidebar {
+  border-right: 1px solid rgba(200, 80, 255, 0.35);
+  padding: 28px 18px;
+}
+
+.category {
+  height: 58px;
+  padding: 0 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 1px solid rgba(200, 80, 255, 0.55);
+  background: rgba(20, 0, 30, 0.45);
+
+  font-family: "Cinzel", serif;
+  font-size: 20px;
+  color: #d774ff;
+  letter-spacing: 1px;
+}
+
+.category.active {
+  color: #fff;
+  box-shadow:
+    0 0 14px rgba(220, 120, 255, 0.75),
+    inset 0 0 20px rgba(180, 0, 255, 0.2);
+}
+
+.protocol {
+  margin-top: 14px;
+  padding: 20px;
+  min-height: 170px;
+  border: 1px solid rgba(200, 80, 255, 0.4);
+  background: rgba(10, 0, 18, 0.55);
+  font-family: "Cinzel", serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 1.9;
+}
+
+.logo-box {
+  margin: 34px auto 0;
+  width: 130px;
+  height: 130px;
+  border: 1px solid rgba(200, 80, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cinzel", serif;
+  font-size: 72px;
+  color: #b900ff;
+  text-shadow: 0 0 20px rgba(200, 80, 255, 0.9);
+}
+
+/* VIEWER */
+.viewer-area {
+  position: relative;
+  padding: 18px 34px 24px;
+}
+
+.feature-wrap {
+  height: 58%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.feature-box {
+  width: 76%;
+  height: 100%;
+  border: 1px solid rgba(220, 100, 255, 0.85);
+  box-shadow:
+    0 0 18px rgba(200, 80, 255, 0.55),
+    inset 0 0 25px rgba(140, 0, 180, 0.2);
+  background:
+    linear-gradient(135deg, rgba(60, 0, 80, 0.28), rgba(0,0,0,0.8));
+  position: relative;
+}
+
+.feature-box::after {
+  content: "FEATURED IMAGE";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cinzel", serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  opacity: 0.35;
+}
+
+.feature-label {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 34px;
+  border: 1px solid rgba(220, 100, 255, 0.75);
+  background: rgba(15, 0, 25, 0.9);
+  font-family: "Cinzel", serif;
+  letter-spacing: 2px;
+}
+
+.arrow {
+  position: absolute;
+  top: 45%;
+  font-size: 72px;
+  color: #d774ff;
+  text-shadow: 0 0 14px rgba(200, 80, 255, 0.8);
+}
+
+.arrow.left { left: 20px; }
+.arrow.right { right: 20px; }
+
+/* THUMBS */
+.thumb-row {
+  height: 35%;
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+
+.thumb-card {
+  border: 1px solid rgba(200, 80, 255, 0.65);
+  background: rgba(15, 0, 25, 0.7);
+  padding: 10px;
+  box-shadow: 0 0 12px rgba(200, 80, 255, 0.3);
+}
+
+.thumb-img {
+  height: 120px;
+  border: 1px solid rgba(220, 100, 255, 0.55);
+  background:
+    linear-gradient(135deg, rgba(80, 0, 110, 0.25), rgba(0,0,0,0.8));
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.thumb-img::after {
+  content: "IMAGE";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cinzel", serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  opacity: 0.35;
+}
+
+.thumb-card h3 {
+  font-family: "Cinzel", serif;
+  font-size: 15px;
+  color: #d774ff;
+  margin-bottom: 5px;
+}
+
+.thumb-card p {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #d8a6ff;
+}
+
+.footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: "Cinzel", serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #c66cff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="archive-page">
+
+  <div class="header">
+    <div class="title">
+      <h1>ROXIE IMAGE ARCHIVE</h1>
+      <p>AUTHORIZED VIEWING SESSION ACTIVE</p>
+      <div class="status-bar">
+        SESSION: MONITORED &nbsp; ● &nbsp; ACCESS LEVEL: DEVOTEE &nbsp; ● &nbsp; FILES RECOVERED: 24
+      </div>
+    </div>
+
+    <a href="index.html" class="back-btn">← BACK</a>
+  </div>
+
+  <div class="archive-layout">
+
+    <aside class="sidebar">
+      <div class="category active">LATEST <span>●</span></div>
+      <div class="category">Era 1 <span>✧</span></div>
+      <div class="category">Era 2<span>♕</span></div>
+      <div class="category">Era 3 <span>▣</span></div>
+      <div class="category">Era 4 <span>X</span></div>
+
+      <div class="protocol">
+        ARCHIVE PROTOCOL<br>
+        &gt;&gt; USER: DEVOTEE_17<br>
+        &gt;&gt; CLEARANCE: PURPLE<br>
+        &gt;&gt; PROTOCOL: RX-7<br>
+        &gt;&gt; STATUS: ACTIVE
+      </div>
+
+      <div class="logo-box">R</div>
+    </aside>
+
+    <main class="viewer-area">
+      <div class="feature-wrap">
+        <div class="arrow left">‹</div>
+
+        <div class="feature-box">
+          <div class="feature-label">RX-014 // OBSERVATION FILE</div>
+        </div>
+
+        <div class="arrow right">›</div>
+      </div>
+
+      <div class="thumb-row">
+        <div class="thumb-card">
+          <div class="thumb-img"></div>
+          <h3>RX-011</h3>
+          <p>PRE-MERGE</p>
+        </div>
+
+        <div class="thumb-card">
+          <div class="thumb-img"></div>
+          <h3>RX-012</h3>
+          <p>MIRROR TEST</p>
+        </div>
+
+        <div class="thumb-card">
+          <div class="thumb-img"></div>
+          <h3>RX-013</h3>
+          <p>PUBLIC RELEASE</p>
+        </div>
+
+        <div class="thumb-card">
+          <div class="thumb-img"></div>
+          <h3>RX-014</h3>
+          <p>OBSERVATION FILE</p>
+        </div>
+
+        <div class="thumb-card">
+          <div class="thumb-img"></div>
+          <h3>RX-015</h3>
+          <p>XOTTON OVERRIDE</p>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="footer">ALL FILES PROPERTY OF ROXIE // UNAUTHORIZED ACCESS IS FORBIDDEN</div>
+
+</div>
+
+</body>
+</html>
