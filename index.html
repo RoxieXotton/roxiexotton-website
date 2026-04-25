@@ -352,33 +352,45 @@
       font-family: Arial, sans-serif;
     }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 10px;
-      background: #a100ff;
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: 0.2s;
-      box-shadow:
-        0 0 12px #a100ff,
-        0 0 22px rgba(161, 0, 255, 0.45);
-    }
+button {
+  width: 100%;
+  padding: 18px 20px;
+  margin-top: 14px;
 
+  border-radius: 16px;
+  border: 1px solid rgba(210, 120, 255, 0.6);
+
+  background: linear-gradient(
+    180deg,
+    rgba(35, 0, 55, 0.95) 0%,
+    rgba(15, 0, 30, 0.95) 100%
+  );
+
+  color: #f0dcff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  box-shadow:
+    0 0 12px rgba(200, 100, 255, 0.45),
+    0 0 28px rgba(180, 60, 255, 0.25);
+}
     button + button {
       margin-top: 18px;
     }
 
-    button:hover {
-      background: #c03cff;
-      box-shadow:
-        0 0 18px #c03cff,
-        0 0 30px rgba(192, 60, 255, 0.6);
-    }
+   button:hover {
+  transform: scale(1.04);
+
+  border-color: rgba(230, 160, 255, 0.9);
+
+  box-shadow:
+    0 0 18px rgba(220, 120, 255, 0.7),
+    0 0 40px rgba(200, 80, 255, 0.4);
+}
 
     .privacy-text {
       margin-top: 18px;
