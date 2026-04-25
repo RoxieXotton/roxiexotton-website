@@ -1,1 +1,307 @@
-<html><body style='background:black;color:white;font-family:Arial;padding:40px;'><h1>Roxie Lore</h1><p>Add your lore here.</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roxie Lore</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  background: #000;
+  color: #e8b8ff;
+  font-family: "Cormorant Garamond", serif;
+  overflow: hidden;
+}
+
+/* MAIN LAYOUT */
+.lore-page {
+  display: flex;
+  height: 100vh;
+}
+
+/* TIMELINE */
+.timeline {
+  width: 120px;
+  position: relative;
+}
+
+.line {
+  position: absolute;
+  top: 55px;
+  bottom: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #b900ff 5%,
+    #b900ff 95%,
+    transparent
+  );
+  box-shadow:
+    0 0 8px #b900ff,
+    0 0 18px rgba(185, 0, 255, 0.8);
+}
+
+.node {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(210, 80, 255, 0.9);
+  background: radial-gradient(circle, rgba(45, 0, 65, 0.95), rgba(5, 0, 10, 0.9));
+
+  color: #f0dcff;
+  font-family: "Cinzel", serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.05;
+
+  box-shadow:
+    0 0 14px rgba(190, 0, 255, 0.9),
+    inset 0 0 18px rgba(190, 0, 255, 0.25);
+}
+
+/* ERA POSITIONS */
+.node1 { top: 225px; }
+.node2 { top: 425px; }
+.node3 { top: 550px; }
+.node4 { top: 750px; }
+
+/* DOTS */
+.dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d65cff;
+  box-shadow:
+    0 0 8px #d65cff,
+    0 0 14px rgba(214, 92, 255, 0.8);
+}
+
+/* DOT TEXT */
+.dot span {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  font-size: 12px;
+  color: #d8a6ff;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.dot:hover span {
+  opacity: 1;
+  text-shadow: 0 0 8px #d65cff;
+}
+
+/* DOT POSITIONS */
+.dot1 { top: 110px; }
+.dot2 { top: 160px; }
+.dot3 { top: 350px; }
+.dot4 { top: 680px; }
+
+/* CONTENT */
+.lore-content {
+  width: 40%;
+  position: relative;
+  padding: 0 40px;
+}
+
+.lore-item {
+  position: absolute;
+  left: 40px;
+  width: calc(100% - 80px);
+
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  background: rgba(20, 0, 30, 0.6);
+  border: 1px solid rgba(200, 100, 255, 0.5);
+  border-radius: 12px;
+
+  padding: 15px;
+
+  box-shadow: 0 0 12px rgba(200, 100, 255, 0.3);
+  transition: 0.2s ease;
+}
+
+.lore-item:hover {
+  transform: scale(1.03);
+  box-shadow:
+    0 0 18px rgba(220, 120, 255, 0.7),
+    0 0 30px rgba(200, 80, 255, 0.3);
+}
+
+/* ALIGN WITH ERAS */
+.lore-item:nth-child(1) { top: 200px; }
+.lore-item:nth-child(2) { top: 400px; }
+.lore-item:nth-child(3) { top: 525px; }
+.lore-item:nth-child(4) { top: 725px; }
+
+.lore-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+.lore-item h3 {
+  color: #d774ff;
+  font-size: 20px;
+}
+
+.lore-item p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #d8a6ff;
+}
+
+/* RIGHT IMAGE */
+.lore-image {
+  flex: 1;
+  background-image: url("lorebg.png");
+  background-size: cover;
+  background-position: center;
+}
+
+/* TITLE */
+.title {
+  position: absolute;
+  top: 30px;
+  left: 140px;
+  font-family: "Cinzel", serif;
+  font-size: 42px;
+  letter-spacing: 2px;
+  color: #d774ff;
+  text-shadow:
+    0 0 10px rgba(200, 100, 255, 0.8),
+    0 0 30px rgba(200, 100, 255, 0.4);
+}
+
+/* BACK BUTTON */
+.back-btn {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+
+  font-family: "Cinzel", serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+
+  color: #e8b8ff;
+  text-decoration: none;
+
+  padding: 8px 16px;
+  border: 1px solid rgba(200, 100, 255, 0.5);
+  border-radius: 8px;
+
+  background: rgba(20, 0, 30, 0.6);
+
+  box-shadow: 0 0 10px rgba(200, 100, 255, 0.3);
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #fff;
+  border-color: #d774ff;
+
+  box-shadow:
+    0 0 16px rgba(220, 120, 255, 0.7),
+    0 0 30px rgba(200, 80, 255, 0.3);
+
+  transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">Roxie Lore</div>
+<a href="index.html" class="back-btn">← BACK</a>
+
+<div class="lore-page">
+
+  <div class="timeline">
+    <div class="line"></div>
+
+    <div class="dot dot1"><span>PRE MERGE — REDACTED</span></div>
+    <div class="dot dot2"><span>INITIAL SIGNAL</span></div>
+    <div class="dot dot3"><span>AWAKENING</span></div>
+    <div class="dot dot4"><span>CONTROL LOCK</span></div>
+
+    <div class="node node1">ERA<br>1</div>
+    <div class="node node2">ERA<br>2</div>
+    <div class="node node3">ERA<br>3</div>
+    <div class="node node4">ERA<br>4</div>
+  </div>
+
+  <div class="lore-content">
+
+    <div class="lore-item">
+      <img src="lore1.png">
+      <div>
+        <h3>THE CREATION</h3>
+        <p>It started in the dark. A spark. An idea. An obsession.</p>
+      </div>
+    </div>
+
+    <div class="lore-item">
+      <img src="lore2.png">
+      <div>
+        <h3>THE AWAKENING</h3>
+        <p>She opened her eyes and the world changed.</p>
+      </div>
+    </div>
+
+    <div class="lore-item">
+      <img src="lore3.png">
+      <div>
+        <h3>THE CONTROL</h3>
+        <p>You don’t find Roxie. She finds you.</p>
+      </div>
+    </div>
+
+    <div class="lore-item">
+      <img src="lore4.png">
+      <div>
+        <h3>THE DEVOTION</h3>
+        <p>Once you're chosen, there’s no turning back.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lore-image"></div>
+
+</div>
+
+</body>
+</html>
