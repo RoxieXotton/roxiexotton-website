@@ -3,7 +3,6 @@
 <head>
   <title>Roxie Xotton</title>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
 
   <style>
     * {
@@ -183,9 +182,16 @@
 
   <div class="left-column">
 
-    <div class="music-player">
-      <div id="musicFrame"></div>
-    </div>
+   <div class="music-player">
+  <iframe
+    id="bunnyPlayer"
+    src=""
+    loading="lazy"
+    style="width:100%; height:100%; border:none; border-radius:50%; overflow:hidden;"
+    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+    allowfullscreen>
+  </iframe>
+</div>
 
     <div class="social-column">
       <a href="https://www.instagram.com/roxiexotton/" target="_blank" class="social-icon">
@@ -214,21 +220,30 @@
 </div>
 
 <script>
-  const videos = ["UgSbS39BnSc","FMOFix9Zk2A","i_K3ppIzwr8"];
-  let player;
+  const bunnyVideos = [
+    "https://player.mediadelivery.net/embed/657051/8a3b4261-e19a-4711-aba5-7205607a3314?autoplay=true&muted=true",
+    "https://player.mediadelivery.net/embed/657051/d01f5b4e-e6f3-495a-b783-dcf14a43d154?autoplay=true&muted=true",
+    "https://player.mediadelivery.net/embed/657051/14315746-2275-4167-9db9-f193e190887f?autoplay=true&muted=true"
+  ];
 
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player("musicFrame", {
-      videoId: videos[Math.floor(Math.random() * videos.length)],
-      playerVars: {
-        autoplay: 1,
-        mute: 1,
-        controls: 0,
-        modestbranding: 1,
-        rel: 0
-      }
-    });
+  const bunnyPlayer = document.getElementById("bunnyPlayer");
+  let currentVideo = -1;
+
+  function loadRandomVideo() {
+    let nextVideo;
+
+    do {
+      nextVideo = Math.floor(Math.random() * bunnyVideos.length);
+    } while (nextVideo === currentVideo && bunnyVideos.length > 1);
+
+    currentVideo = nextVideo;
+    bunnyPlayer.src = bunnyVideos[currentVideo];
   }
+
+  loadRandomVideo();
+
+  setInterval(loadRandomVideo, 51000);
+  
 </script>
 
 </body>
