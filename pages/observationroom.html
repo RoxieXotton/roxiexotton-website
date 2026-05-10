@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Observation Room</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   FULLSCREEN BACKGROUND VIDEO
+========================= */
+
+.bg-video{
+    position:fixed;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    z-index:0;
+}
+
+/* =========================
+   DARK ROOM OVERLAY
+========================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,0,0,0.18) 0%,
+            rgba(0,0,0,0.72) 100%
+        );
+
+    z-index:1;
+    pointer-events:none;
+}
+
+/* =========================
+   OPTIONAL ROOM FOG
+========================= */
+
+.fog{
+    position:fixed;
+    inset:0;
+
+    z-index:1;
+
+    pointer-events:none;
+
+    opacity:0.16;
+
+    background:
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(180,120,255,0.20),
+            transparent 45%
+        );
+
+    filter:blur(55px);
+}
+
+/* =========================
+   OBSERVATION WINDOW
+========================= */
+
+.video-window{
+    position:fixed;
+
+    left:50%;
+    top:49%;
+
+    transform:translate(-50%, -50%);
+
+    width:min(64vw, 1080px);
+    aspect-ratio:16 / 9;
+
+    z-index:2;
+
+    overflow:hidden;
+
+    background:black;
+
+    border:1px solid rgba(180,120,255,0.35);
+
+    box-shadow:
+        0 0 2px rgba(255,255,255,0.15),
+        0 0 12px rgba(180,90,255,0.45),
+        0 0 40px rgba(120,30,255,0.28),
+        inset 0 0 80px rgba(0,0,0,0.95),
+        inset 0 0 25px rgba(120,40,255,0.18);
+
+    border-radius:2px;
+
+    transition:
+        transform 0.9s ease,
+        opacity 0.6s ease;
+}
+
+/* INNER FRAME */
+
+.video-window::before{
+    content:"";
+
+    position:absolute;
+    inset:10px;
+
+    border:1px solid rgba(255,255,255,0.04);
+
+    pointer-events:none;
+
+    z-index:3;
+}
+
+/* GLASS REFLECTION */
+
+.video-window::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            115deg,
+            rgba(255,255,255,0.08) 0%,
+            rgba(255,255,255,0.02) 18%,
+            transparent 35%
+        );
+
+    mix-blend-mode:screen;
+
+    z-index:4;
+}
+
+/* =========================
+   EMBEDDED PLAYER
+========================= */
+
+.video-window iframe{
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    border:none;
+}
+
+/* =========================
+   SCREEN VIGNETTE
+========================= */
+
+.screen-vignette{
+    position:absolute;
+    inset:0;
+
+    z-index:2;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 55%,
+            rgba(0,0,0,0.38) 100%
+        );
+}
+
+.ui-link{
+    text-decoration:none;
+}
+
+/* =========================
+   BOTTOM UI
+========================= */
+
+.bottom-ui{
+    position:fixed;
+
+    left:50%;
+    bottom:85px;
+
+    transform:translateX(-50%);
+
+    display:flex;
+    align-items:center;
+
+    gap:34px;
+
+    z-index:10;
+
+    transition:opacity 0.35s ease;
+}
+
+.ui-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    gap:10px;
+
+    color:#b86cff;
+
+    opacity:0.8;
+
+    font-size:13px;
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    text-shadow:
+        0 0 10px rgba(184,108,255,0.75);
+
+    cursor:pointer;
+
+    transition:0.25s ease;
+}
+
+.ui-icon{
+    font-size:34px;
+    line-height:1;
+
+    filter:
+        drop-shadow(0 0 5px rgba(184,108,255,0.85))
+        drop-shadow(0 0 18px rgba(184,108,255,0.45));
+}
+
+.ui-item:hover,
+.ui-item.active{
+    opacity:1;
+
+    color:#d8b0ff;
+
+    transform:translateY(-3px);
+}
+
+.divider{
+    width:1px;
+    height:58px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(184,108,255,0.48),
+            transparent
+        );
+}
+
+/* =========================
+   TRANSITION
+========================= */
+
+.transition-black{
+    position:fixed;
+    inset:0;
+
+    background:black;
+
+    z-index:50;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:opacity 0.7s ease;
+}
+
+/* ACTIVE TRANSITION */
+
+body.zooming .transition-black{
+    opacity:1;
+}
+
+body.zooming .video-window{
+    transform:translate(-50%, -50%) scale(2.8);
+}
+
+body.zooming .bottom-ui{
+    opacity:0;
+}
+
+body.zooming iframe{
+    opacity:0;
+    transition:opacity 0.25s ease;
+}
+
+body.returning .video-window{
+    animation:zoomOutFromScreen 0.9s ease;
+}
+
+@keyframes zoomOutFromScreen{
+
+    from{
+        transform:translate(-50%, -50%) scale(2.8);
+        opacity:0;
+    }
+
+    to{
+        transform:translate(-50%, -50%) scale(1);
+        opacity:1;
+    }
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     BACKGROUND VIDEO
+========================= -->
+
+<video
+    class="bg-video"
+    autoplay
+    muted
+    loop
+    playsinline
+>
+    <source
+        src="../videos/observationroomlights.mp4"
+        type="video/mp4"
+    >
+</video>
+
+<!-- =========================
+     OVERLAY
+========================= -->
+
+<div class="overlay"></div>
+
+<!-- =========================
+     ROOM FOG
+========================= -->
+
+<div class="fog"></div>
+
+<!-- =========================
+     OBSERVATION WINDOW
+========================= -->
+
+<div class="video-window">
+
+    <iframe
+        src="https://player.mediadelivery.net/play/657051/828556d4-93c3-4f84-b74c-82a668b9efc3?autoplay=false&loop=false&muted=false&preload=true"
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+        allowfullscreen>
+    </iframe>
+
+    <div class="screen-vignette"></div>
+
+</div>
+
+<!-- =========================
+     BOTTOM UI
+========================= -->
+
+<div class="bottom-ui">
+
+    <div class="ui-item">
+        <div class="ui-icon">◎</div>
+        <span>VIDEO</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <a href="pics.html" class="ui-link" id="images-link">
+        <div class="ui-item">
+            <div class="ui-icon">▧</div>
+            <span>IMAGES</span>
+        </div>
+    </a>
+
+    <div class="divider"></div>
+
+    <div class="ui-item">
+        <div class="ui-icon">≋</div>
+        <span>AUDIO</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="ui-item">
+        <div class="ui-icon">▱</div>
+        <span>FILES</span>
+    </div>
+
+</div>
+
+<!-- =========================
+     BLACK TRANSITION
+========================= -->
+
+<div class="transition-black"></div>
+
+<!-- =========================
+     TRANSITION SCRIPT
+========================= -->
+
+<script>
+
+const imagesLink = document.getElementById("images-link");
+
+imagesLink.addEventListener("click", function(event){
+
+    event.preventDefault();
+
+    document.body.classList.add("zooming");
+
+    setTimeout(function(){
+
+        window.location.href = imagesLink.href;
+
+    }, 900);
+
+});
+
+</script>
+<script>
+
+if(sessionStorage.getItem("returningFromPics") === "true"){
+
+    document.body.classList.add("returning");
+
+    sessionStorage.removeItem("returningFromPics");
+
+}
+
+</script>
+</body>
+</html>
