@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roxie Members</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Cormorant Garamond", serif;
+      background: #000;
+      color: white;
+      overflow: hidden;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background-image: url("images/bg/bg.png");
+      background-size: 70%;
+      background-position: center center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("images/bg/bg.png");
+      background-size: 70%;
+      background-position: center center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .page::before {
+      mix-blend-mode: screen;
+      animation: glitchRed 7s infinite;
+    }
+
+    .page::after {
+      mix-blend-mode: screen;
+      animation: glitchBlue 7s infinite;
+    }
+
+    @keyframes glitchRed {
+      0%, 88%, 100% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+      89% {
+        opacity: 0.9;
+        transform: translate(-18px, 6px);
+        filter: hue-rotate(-40deg) saturate(3) brightness(1.2);
+      }
+      89.5% {
+        opacity: 0.7;
+        transform: translate(14px, -8px);
+        filter: hue-rotate(-60deg) saturate(5) contrast(2);
+      }
+      90% {
+        opacity: 0.95;
+        transform: translate(-25px, 10px) skewX(6deg);
+        filter: hue-rotate(-90deg) saturate(5) brightness(1.4);
+      }
+      90.5% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+      94% {
+        opacity: 0.75;
+        transform: translate(12px, -4px);
+        filter: hue-rotate(-30deg) saturate(4);
+      }
+      94.5% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+    }
+
+    @keyframes glitchBlue {
+      0%, 88%, 100% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+      89% {
+        opacity: 0.8;
+        transform: translate(20px, -5px);
+        filter: hue-rotate(180deg) saturate(4) brightness(1.15);
+      }
+      89.4% {
+        opacity: 0.9;
+        transform: translate(-12px, 8px);
+        filter: hue-rotate(220deg) saturate(6) contrast(2);
+      }
+      90% {
+        opacity: 1;
+        transform: translate(28px, -10px) skewY(-4deg);
+        filter: hue-rotate(250deg) saturate(6) brightness(1.3);
+      }
+      90.5% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+      94% {
+        opacity: 0.8;
+        transform: translate(-10px, 4px);
+        filter: hue-rotate(210deg) saturate(4);
+      }
+      94.5% {
+        opacity: 0;
+        transform: translate(0, 0);
+        filter: none;
+      }
+    }
+
+.left-column {
+  position: absolute;
+  left: 6vw;
+  top: 52%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  z-index: 5;
+}
+
+.music-player {
+  width: 240px;
+  height: 240px;
+  margin-bottom: 10px;
+  transform: translateX(-90px) translateY(-320px);
+  border: 1px solid rgba(200, 107, 255, 0.35);
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(4px);
+  box-shadow:
+    0 0 14px rgba(161, 0, 255, 0.35),
+    0 0 28px rgba(161, 0, 255, 0.18);
+  position: relative;
+}
+
+.music-player::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(200, 107, 255, 0.2);
+  box-shadow: 0 0 20px rgba(180, 0, 255, 0.3);
+  pointer-events: none;
+}
+
+#musicFrame,
+#musicFrame iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.music-player iframe {
+  pointer-events: none;
+}    .social-column {
+      position: absolute;
+      left: -0.1vw;
+      top: 70%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 5;
+    }
+
+    .social-icon {
+      width: 58px;
+      height: 58px;
+      border: 1px solid rgba(200, 107, 255, 0.35);
+      border-radius: 14px;
+      background: rgba(10, 10, 10, 0.55);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 12px rgba(161, 0, 255, 0.35),
+        0 0 24px rgba(161, 0, 255, 0.18);
+      transition: 0.2s ease;
+    }
+
+    .social-icon:hover {
+      transform: scale(1.08);
+      border-color: rgba(216, 140, 255, 0.7);
+      box-shadow:
+        0 0 18px rgba(200, 107, 255, 0.55),
+        0 0 32px rgba(200, 107, 255, 0.3);
+    }
+
+    .social-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      filter:
+        brightness(0)
+        saturate(100%)
+        invert(66%)
+        sepia(41%)
+        saturate(2442%)
+        hue-rotate(239deg)
+        brightness(102%)
+        contrast(101%);
+    }
+
+    .login-wrap {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 430px;
+      margin-right: 7vw;
+    }
+
+    .login-box {
+      position: relative;
+      background: rgba(10, 10, 10, 0.72);
+      border: 1px solid rgba(160, 0, 255, 0.35);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 0 25px rgba(160, 0, 255, 0.18);
+      backdrop-filter: blur(4px);
+    }
+
+    .roxie-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -150px;
+      width: 700px;
+      text-align: center;
+      font-family: "Cinzel", serif;
+      font-size: 62px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #d98cff;
+      text-shadow:
+        0 0 10px rgba(201, 107, 255, 0.95),
+        0 0 24px rgba(201, 107, 255, 0.7),
+        0 0 48px rgba(201, 107, 255, 0.35);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+   .goddess-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -150px;
+  width: 700px;
+  text-align: center;
+  font-family: "Cinzel", serif;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #d98cff;
+  text-shadow:
+    0 0 10px rgba(201, 107, 255, 0.95),
+    0 0 24px rgba(201, 107, 255, 0.7),
+    0 0 48px rgba(201, 107, 255, 0.35);
+}
+
+.sub-text {
+  display: block;
+  font-size: 18px;
+  margin-top: 10px;
+  opacity: 0.7;
+  letter-spacing: 0.6px;
+  color: #e0b3ff;
+
+  text-shadow:
+    0 0 6px rgba(200, 107, 255, 0.6),
+    0 0 14px rgba(200, 107, 255, 0.4);
+
+  animation: subtleFlicker 4s infinite;
+}
+
+@keyframes subtleFlicker {
+  0%, 100% { opacity: 0.7; }
+  45% { opacity: 0.85; }
+  48% { opacity: 0.4; }
+  52% { opacity: 0.9; }
+  55% { opacity: 0.6; }
+}
+
+    .login-box h2 {
+      color: #c86bff;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow:
+        0 0 10px rgba(200, 107, 255, 0.8),
+        0 0 20px rgba(200, 107, 255, 0.35);
+    }
+
+    .login-box .divider {
+      height: 1px;
+      background: #c86bff;
+      opacity: 0.5;
+      margin: 10px 0 18px 0;
+      position: relative;
+      box-shadow: 0 0 10px rgba(200, 107, 255, 0.45);
+    }
+
+    .login-box .divider::after {
+      content: "♦";
+      color: #c86bff;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: rgba(10, 10, 10, 0.72);
+      padding: 0 6px;
+      font-size: 14px;
+      text-shadow:
+        0 0 8px rgba(200, 107, 255, 0.8),
+        0 0 16px rgba(200, 107, 255, 0.4);
+    }
+
+    .login-box h3 {
+      color: #d89cff;
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 26px;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      text-shadow:
+        0 0 8px rgba(200, 107, 255, 0.7),
+        0 0 16px rgba(200, 107, 255, 0.3);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #111;
+      color: white;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+.age-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0 0 16px 0;
+  color: #d89cff;
+  font-size: 14px;
+  line-height: 1;
+  text-shadow:
+    0 0 6px rgba(200, 107, 255, 0.6),
+    0 0 12px rgba(200, 107, 255, 0.3);
+}
+
+.age-check input {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  border-radius: 3px;
+  accent-color: #c86bff;
+  cursor: pointer;
+}
+
+.age-check label {
+  cursor: pointer;
+  user-select: none;
+}
+
+button {
+  width: 100%;
+  padding: 18px 20px;
+  margin-top: 14px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(210, 120, 255, 0.6);
+
+  background: linear-gradient(
+    180deg,
+    rgba(35, 0, 55, 0.95) 0%,
+    rgba(15, 0, 30, 0.95) 100%
+  );
+
+  color: #f0dcff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  box-shadow:
+    0 0 12px rgba(200, 100, 255, 0.45),
+    0 0 28px rgba(180, 60, 255, 0.25);
+}
+
+button.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow:
+    0 0 6px rgba(200, 100, 255, 0.2),
+    0 0 14px rgba(180, 60, 255, 0.12);
+}
+
+    button + button {
+      margin-top: 18px;
+    }
+
+   button:hover {
+  transform: scale(1.04);
+
+  border-color: rgba(230, 160, 255, 0.9);
+
+  box-shadow:
+    0 0 18px rgba(220, 120, 255, 0.7),
+    0 0 40px rgba(200, 80, 255, 0.4);
+}
+
+button.locked:hover {
+  transform: none;
+  border-color: rgba(210, 120, 255, 0.6);
+  box-shadow:
+    0 0 6px rgba(200, 100, 255, 0.2),
+    0 0 14px rgba(180, 60, 255, 0.12);
+}
+
+    .privacy-text {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #c86bff;
+      opacity: 0.8;
+      text-shadow:
+        0 0 8px rgba(200, 107, 255, 0.4),
+        0 0 16px rgba(200, 107, 255, 0.2);
+    }
+
+    #message {
+      margin-top: 15px;
+      color: #ff66ff;
+      min-height: 20px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+ <div class="page">
+
+ 
+
+  <div class="left-column">
+
+  <div class="music-player">
+  <iframe
+    id="bunnyPlayer"
+    src=""
+    loading="lazy"
+    style="width:100%; height:100%; border:none; border-radius:50%; overflow:hidden;"
+    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<script>
+  const bunnyVideos = [
+    "https://player.mediadelivery.net/embed/657051/8a3b4261-e19a-4711-aba5-7205607a3314?autoplay=true&muted=true",
+    "https://player.mediadelivery.net/embed/657051/d01f5b4e-e6f3-495a-b783-dcf14a43d154?autoplay=true&muted=true",
+    "https://player.mediadelivery.net/embed/657051/14315746-2275-4167-9db9-f193e190887f?autoplay=true&muted=true"
+  ];
+
+  const bunnyPlayer = document.getElementById("bunnyPlayer");
+  let currentVideo = -1;
+
+  function loadRandomVideo() {
+    let nextVideo;
+
+    do {
+      nextVideo = Math.floor(Math.random() * bunnyVideos.length);
+    } while (nextVideo === currentVideo && bunnyVideos.length > 1);
+
+    currentVideo = nextVideo;
+    bunnyPlayer.src = bunnyVideos[currentVideo];
+  }
+
+  loadRandomVideo();
+
+  setInterval(loadRandomVideo, 51000);
+</script>
+
+  <div class="social-column">
+    <a href="https://www.instagram.com/roxiexotton/" class="social-icon" target="_blank">
+      <img src="images/icons/instagram.svg">
+    </a>
+
+    <a href="https://open.spotify.com/artist/0VDxGgXiZGBfHgMcNGG6f8" class="social-icon" target="_blank">
+      <img src="images/icons/spotify.svg">
+    </a>
+
+    <a href="https://www.tiktok.com/@roxiexotton" class="social-icon" target="_blank">
+    <img src="images/icons/tiktok.svg">
+    </a>
+
+    <a href="https://www.youtube.com/channel/UCP6750YuNB92aYa4OgwBzCw" class="social-icon" target="_blank">
+     <img src="images/icons/youtube.svg" alt="YouTube">
+    </a>
+
+    <a href="https://www.facebook.com/roxiexotton/" class="social-icon" target="_blank">
+      <img src="images/icons/facebook.svg">
+    </a>
+  </div>
+
+</div>
+
+
+<div class="login-wrap">
+  <div class="roxie-title">Roxie Xotton</div>
+
+      <div class="login-box">
+        <h2>Pledge Yourself / Submit</h2>
+        <div class="divider"></div>
+        <h3>Access Portal</h3>
+
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+
+        <div class="age-check">
+          <input type="checkbox" id="ageCheck" onchange="toggleAgeCheck()" />
+          <label for="ageCheck">I confirm I am 18+</label>
+        </div>
+
+        <button id="enterBtn" class="locked" onclick="enterSystem()">Enter System</button>
+
+        <p class="privacy-text">
+          Roxie only keeps your information, desires, and secrets for herself.
+        </p>
+
+        <p id="message"></p>
+      </div>
+
+      <div class="goddess-text">
+  Your Synthetic Goddess
+  <br>
+  <span class="sub-text">She already knows you're here</span>
+</div>
+    </div>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://ghfjfuewrmtkoqcqcujo.supabase.co";
+    const supabaseKey = "sb_publishable_DYIDai05yxMKsJbyU9K_pA_AxfdmSII";
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    function toggleAgeCheck() {
+      const ageCheck = document.getElementById("ageCheck");
+      const enterBtn = document.getElementById("enterBtn");
+
+      if (ageCheck.checked) {
+        enterBtn.classList.remove("locked");
+        document.getElementById("message").innerText = "";
+      } else {
+        enterBtn.classList.add("locked");
+      }
+    }
+
+    async function enterSystem() {
+      const ageCheck = document.getElementById("ageCheck");
+
+      if (!ageCheck.checked) {
+        document.getElementById("message").innerText = "Access denied: age not verified";
+        return;
+      }
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      let { error } = await client.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        const { error: signUpError } = await client.auth.signUp({ email, password });
+
+        if (signUpError) {
+          document.getElementById("message").innerText = signUpError.message;
+          return;
+        }
+      }
+
+      window.location.href = "pages/home.html";
+    }
+  </script>
+</body>
+</html>
